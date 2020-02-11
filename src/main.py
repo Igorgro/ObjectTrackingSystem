@@ -16,12 +16,14 @@ def main():
     with ThreadPoolExecutor(max_workers=4) as executor:
         while True:
             frame = vs.read()[1]
-            frame = cv2.resize(frame, (240, 144), interpolation=cv2.INTER_AREA)
-            faces = executor.submit(proceed_frame, face_cascade, frame)
+            coeff = frame.shape[0] / 240  # lower coefficient for image quality for better performance
+            proceeding_frame = cv2.resize(frame, (int(frame.shape[1] / coeff), int(frame.shape[0] // coeff)), interpolation=cv2.INTER_AREA)
+            faces = executor.submit(proceed_frame, face_cascade, proceeding_frame)
             face, centroid = face_holder.update(faces.result())  # actual face
             if face is not None:
-                (x, y, w, h) = face
-                executor.submit(calculate_angle, centroid[0], frame.shape[1], webcam_angle)
+                x, y, w, h = list(map(lambda el: int(el*coeff), face))
+                centroid_x, centroid_y = list(map(lambda el: int(el*coeff), centroid))
+                executor.submit(calculate_angle, centroid_x, frame.shape[1], webcam_angle)
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
             cv2.imshow(window_name, frame)
             cv2.waitKey(1)

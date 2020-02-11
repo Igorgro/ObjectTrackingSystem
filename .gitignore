@@ -1,3 +1,6 @@
 venv
 .idea
 *.iml
+src/__pycache__
+.vscode
+run.sh

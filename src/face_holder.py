@@ -24,5 +24,3 @@ class FaceHolder:
             min_index = distances.index(min(distances))
             self.face_center = centers[min_index]
             return faces[min_index], self.face_center
-
-

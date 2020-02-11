@@ -1,4 +1,3 @@
-from imutils.video import VideoStream
 import cv2
 import math
 from concurrent.futures import ThreadPoolExecutor
@@ -9,14 +8,15 @@ webcam_angle = math.pi/3
 
 def main():
     window_name = "Face tracking"
-    vs = VideoStream(src=0).start()
+    vs = cv2.VideoCapture(0)
     cv2.namedWindow(window_name, cv2.WINDOW_GUI_EXPANDED)
     face_cascade = cv2.CascadeClassifier("data/haarcascade_frontalface_default.xml")
     face_holder = FaceHolder()
 
     with ThreadPoolExecutor(max_workers=4) as executor:
         while True:
-            frame = vs.read()
+            frame = vs.read()[1]
+            frame = cv2.resize(frame, (240, 144), interpolation=cv2.INTER_AREA)
             faces = executor.submit(proceed_frame, face_cascade, frame)
             face, centroid = face_holder.update(faces.result())  # actual face
             if face is not None:

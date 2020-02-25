@@ -1,3 +1,6 @@
+'''
+Primary module for our servo
+'''
 from gpiozero import Servo
 from time import sleep
 from math import pi
@@ -22,6 +25,6 @@ def rotate (rel_angle):
         servo.detach()
     else:
         servo.detach()
-    
-
-
+        
+def detach():
+    pass

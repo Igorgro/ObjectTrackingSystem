@@ -3,7 +3,7 @@ import math
 from concurrent.futures import ThreadPoolExecutor
 from face_holder import FaceHolder
 
-import servo2 as servo
+import servo3 as servo
 
 webcam_angle = math.pi/3
 
@@ -28,7 +28,7 @@ def main():
                 x, y, w, h = list(map(lambda el: int(el*coeff), face))
                 centroid_x, centroid_y = list(map(lambda el: int(el*coeff), centroid))
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 255, 0), 2)
-                if frame_counter > 4:
+                if frame_counter > -1:
                     executor.submit(calculate_angle, centroid_x, frame.shape[1], webcam_angle)
                     frame_counter = 0
             cv2.imshow(window_name, frame)
